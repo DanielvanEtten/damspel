@@ -10,11 +10,11 @@ Beurtwisseling: Automatische wisseling tussen de witte en zwarte speler na een s
 Geïmplementeerd als pure tekst. Stenen zijn niet grafisch weergegeven maar als tekst: "wit" of "zwart"
 
 # Afhankelijkheden:
-* game2dboard
-    installeer als volgt: 
+* game2dboard <br>
+    installeer als volgt:  <br>
         pip3 install game2dboard
-* tkinter
-    installeer als volgt:
+* tkinter <br>
+    installeer als volgt: <br>
         pip3 install tkinter
 
 # to-do:
