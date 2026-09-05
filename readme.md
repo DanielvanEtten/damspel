@@ -11,11 +11,11 @@ Geïmplementeerd als pure tekst. Stenen zijn niet grafisch weergegeven maar als 
 
 # Afhankelijkheden:
 * game2dboard <br>
-    installeer als volgt:  <br>
-        pip3 install game2dboard
+&nbsp;&nbsp;&nbsp;&nbsp;installeer als volgt:  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        pip3 install game2dboard
 * tkinter <br>
-    installeer als volgt: <br>
-        pip3 install tkinter
+&nbsp;&nbsp;&nbsp;&nbsp; installeer als volgt: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        pip3 install tkinter
 
 # to-do:
     1: implementeren van een dam halen
