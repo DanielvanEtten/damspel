@@ -1,5 +1,8 @@
 # Dit spelletje is gebouwd door Daniël van Etten
 
+Het spelletje is een eerste implementatie van dammen. Dit is een multi-player spelletje waarbij damstukken met de muis verplaatst kunnen worden. 
+Beide spelers maken gebruik van dezelfde computer en muis.
+
 # De volgende regels zijn geïmplementeerd:
 
 Speelbord met 10*10 vlakken.

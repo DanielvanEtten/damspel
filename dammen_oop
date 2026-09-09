@@ -1,15 +1,22 @@
 from game2dboard import Board
 #https://github.com/mjbrusso/game2dboard/tree/master
-
 from tkinter import messagebox
 
 aantal_kolommen = 10
 aantal_rijen = 10
 
-spelbord = None
-scherm = None
-geselecteerde_steen = None
-actieve_speler = "wit"
+#spelbord = None
+#scherm = None
+#geselecteerde_steen = None
+#actieve_speler = "wit"
+
+
+class spel_status:
+   def __init__(self, spelbord, geselecteerde_steen, actieve_speler):
+       self.spelbord = spelbord
+       self.geselecteerde_steen = geselecteerde_steen
+       self.actieve_speler = actieve_speler
+
 
 #functie definities
 def maak_spelbord():
@@ -26,9 +33,12 @@ def maak_spelbord():
     ]
 
 
-def update_scherm():
-    #poets waarde "leeg" weg voor presentatie
-    visueel_bord = [[None if cel == "leeg" else cel for cel in rij] for rij in spelbord]
+def update_scherm(status, scherm):
+    # poets waarde "leeg" weg voor presentatie
+    visueel_bord = [
+        [None if cel == "leeg" else cel for cel in rij]
+        for rij in status.spelbord
+    ]
     scherm.load(visueel_bord)
     
 
@@ -142,18 +152,24 @@ def vakje_geklikt(btn, row, col):
 
 ##Het "hoofdprogramma"
 def main():
-    global spelbord, scherm
+    #global scherm #spelbord, 
     
-    # Initialiseer data en interface
+    # interface
     spelbord = maak_spelbord()
+
+    # initialiseer data
+    status = spel_status(spelbord, None, "wit")
+
+
+   
     
     scherm = Board(aantal_rijen, aantal_kolommen)
-    scherm.title = f"Rechthoekig Dammen ({aantal_kolommen}x{aantal_rijen})"
+    scherm.title = f"Dammen ({aantal_kolommen}x{aantal_rijen})"
     scherm.cell_size = 70
     scherm.on_mouse_click = vakje_geklikt
     
    
-    update_scherm()
+    update_scherm(status=status, scherm=scherm)
     scherm.show()
 
 
