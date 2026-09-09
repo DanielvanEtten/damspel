@@ -24,5 +24,6 @@ Geïmplementeerd als pure tekst. Stenen zijn niet grafisch weergegeven maar als 
     1: implementeren van een dam halen
     2: spelbord mooier maken met kleurvlakken en plaatjes van damstenen
     3: tellers bijhouden van geslagen stukken
+    4: object maken van het spel
 
 
