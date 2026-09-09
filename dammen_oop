@@ -12,139 +12,142 @@ class dammen:
 
         self.spelbord = self.maak_spelbord()
         self.scherm = Board(self.aantal_rijen, self.aantal_kolommen)
-        self.scherm.title = f"Rechthoekig Dammen ({aantal_kolommen}x{aantal_rijen})"
+        self.scherm.title = f"Rechthoekig Dammen ({self.aantal_kolommen}x{self.aantal_rijen})"
         self.scherm.cell_size = 70
-        self.scherm.on_mouse_click = vakje_geklikt
+        self.scherm.on_mouse_click = self.vakje_geklikt
 
-        #functie definities
-        def maak_spelbord(self):
-            #met nested list comprehension eerst rijen dan kolommen invullen. Stenen alleen op oneven r+c combinaties
-            #eventueel later overstappen op "echte matrix" ipv lijst van lijsten met numpy
-            return [
-                [
-                    "zwart" if (r + c) % 2 != 0 and r < 4 else
-                    "wit" if (r + c) % 2 != 0 and r >= aantal_rijen - 4 else
-                    "leeg"
-                    for c in range(aantal_kolommen)
-                ]
-                for r in range(aantal_rijen)
+    #functie definities
+    def maak_spelbord(self):
+        #met nested list comprehension eerst rijen dan kolommen invullen. Stenen alleen op oneven r+c combinaties
+        #eventueel later overstappen op "echte matrix" ipv lijst van lijsten met numpy
+        return [
+            [
+                "zwart" if (r + c) % 2 != 0 and r < 4 else
+                "wit" if (r + c) % 2 != 0 and r >= self.aantal_rijen - 4 else
+                "leeg"
+                for c in range(self.aantal_kolommen)
             ]
+            for r in range(self.aantal_rijen)
+        ]
 
 
-        def update_scherm(self):
-            #poets waarde "leeg" weg voor presentatie
-            visueel_bord = [[None if cel == "leeg" else cel for cel in rij] for rij in spelbord]
-            self.scherm.load(visueel_bord)
-            
+    def update_scherm(self):
+        #poets waarde "leeg" weg voor presentatie
+        visueel_bord = [[None if cel == "leeg" else cel for cel in rij] for rij in self.spelbord]
+        self.scherm.load(visueel_bord)
+        
 
-        def verwijder_vijand(self, van_rij, van_kol, naar_rij, naar_kol):
-            tussen_rij = (van_rij + naar_rij) // 2
-            tussen_kol = (van_kol + naar_kol) // 2
-            self.spelbord[tussen_rij][tussen_kol] = "leeg"
+    def verwijder_vijand(self, van_rij, van_kol, naar_rij, naar_kol):
+        tussen_rij = (van_rij + naar_rij) // 2
+        tussen_kol = (van_kol + naar_kol) // 2
+        self.spelbord[tussen_rij][tussen_kol] = "leeg"
 
 
-        def is_geldige_zet(self, van_rij, van_kol, naar_rij, naar_kol, speler):
-            
-            #Controleert de zet en geeft een tuple terug: (is_geldig, is_slagzet)
+    def is_geldige_zet(self, van_rij, van_kol, naar_rij, naar_kol, speler):
+        
+        #Controleert de zet en geeft een tuple terug: (is_geldig, is_slagzet)
 
-            if not (0 <= naar_rij < aantal_rijen and 0 <= naar_kol < aantal_kolommen):
-                return False, False
-
-            klik_waarde = self.spelbord[naar_rij][naar_kol]
-            vijand = "zwart" if speler == "wit" else "wit"
-
-            rij_verschil = naar_rij - van_rij
-            kol_verschil = abs(naar_kol - van_kol)
-
-            # 1. Normale loopzet
-            juiste_richting = (
-                (speler == "wit" and rij_verschil == -1)
-                or
-                (speler == "zwart" and rij_verschil == 1)
-            )
-            if juiste_richting and kol_verschil == 1 and klik_waarde == "leeg":
-                return True, False  # Geldig, maar GEEN slagzet
-
-            # 2. Slagzet
-            juiste_slag_richting = (
-                (speler == "wit" and rij_verschil == -2)
-                or
-                (speler == "zwart" and rij_verschil == 2)
-            )
-            if juiste_slag_richting and kol_verschil == 2 and klik_waarde == "leeg":
-                tussen_rij = (van_rij + naar_rij) // 2
-                tussen_kol = (van_kol + naar_kol) // 2
-
-                # Data-check: staat er daadwerkelijk een vijand?
-                if self.spelbord[tussen_rij][tussen_kol] == vijand:
-                    return True, True  # Geldig EN een slagzet
-
+        if not (0 <= naar_rij < self.aantal_rijen and 0 <= naar_kol < self.aantal_kolommen):
             return False, False
 
+        klik_waarde = self.spelbord[naar_rij][naar_kol]
+        vijand = "zwart" if speler == "wit" else "wit"
 
-        def kan_steen_slaan(self, r, c, speler):
-            stap_rij = -2 if speler == "wit" else 2
-            for stap_kol in [-2, 2]:
-                geldig, slag = is_geldige_zet(r, c, r + stap_rij, c + stap_kol, speler)
-                if geldig and slag:
-                    return True
-            return False
+        rij_verschil = naar_rij - van_rij
+        kol_verschil = abs(naar_kol - van_kol)
+
+        # 1. Normale loopzet
+        juiste_richting = (
+            (speler == "wit" and rij_verschil == -1)
+            or
+            (speler == "zwart" and rij_verschil == 1)
+        )
+        if juiste_richting and kol_verschil == 1 and klik_waarde == "leeg":
+            return True, False  # Geldig, maar GEEN slagzet
+
+        # 2. Slagzet
+        juiste_slag_richting = (
+            (speler == "wit" and rij_verschil == -2)
+            or
+            (speler == "zwart" and rij_verschil == 2)
+        )
+        if juiste_slag_richting and kol_verschil == 2 and klik_waarde == "leeg":
+            tussen_rij = (van_rij + naar_rij) // 2
+            tussen_kol = (van_kol + naar_kol) // 2
+
+            # Data-check: staat er daadwerkelijk een vijand?
+            if self.spelbord[tussen_rij][tussen_kol] == vijand:
+                return True, True  # Geldig EN een slagzet
+
+        return False, False
 
 
-        def speler_heeft_slagopties(speler):
-            for r in range(aantal_rijen):
-                for c in range(aantal_kolommen):
-                    if spelbord[r][c] == speler:
-                        if kan_steen_slaan(r, c, speler):
-                            return True
-            return False
+    def kan_steen_slaan(self, r, c, speler):
+        stap_rij = -2 if speler == "wit" else 2
+        for stap_kol in [-2, 2]:
+            geldig, slag = self.is_geldige_zet(r, c, r + stap_rij, c + stap_kol, speler)
+            if geldig and slag:
+                return True
+        return False
 
-        #Interface functies
-        def vakje_geklikt(btn, row, col):
-            global geselecteerde_steen, actieve_speler
 
-            klik_waarde = spelbord[row][col]
+    def speler_heeft_slagopties(self, speler):
+        for r in range(self.aantal_rijen):
+            for c in range(self.aantal_kolommen):
+                if self.spelbord[r][c] == speler:
+                    if self.kan_steen_slaan(r, c, speler):
+                        return True
+        return False
 
-            if klik_waarde == actieve_speler:
-                geselecteerde_steen = (row, col)
-                print(f"Geselecteerd: {actieve_speler} op (rij {row}, kolom {col})")
-                return
+    #Interface functies
+    def vakje_geklikt(self, btn, row, col):
+        
 
-            if geselecteerde_steen:
-                van_rij, van_kol = geselecteerde_steen
+        klik_waarde = self.spelbord[row][col]
 
-                # Vraag direct aan de logica of de zet geldig is én of het een slag betreft
-                is_geldig, is_slagzet = is_geldige_zet(van_rij, van_kol, row, col, actieve_speler)
+        if klik_waarde == self.actieve_speler:
+            self.geselecteerde_steen = (row, col)
+            print(f"Geselecteerd: {self.actieve_speler} op (rij {row}, kolom {col})")
+            return
 
-                if is_geldig:
-                    moet_slaan = speler_heeft_slagopties(actieve_speler)
+        if self.geselecteerde_steen:
+            van_rij, van_kol = self.geselecteerde_steen
 
-                    # Slagverplichting controle op basis van de zet-data
-                    if moet_slaan and not is_slagzet:
-                        print("Ongeldige zet: Slaan is verplicht!")
-                        messagebox.showwarning("Slagverplichting", "Je bent verplicht om te slaan!")
-                        geselecteerde_steen = None
-                        return
+            # Vraag direct aan de logica of de zet geldig is én of het een slag betreft
+            is_geldig, is_slagzet = self.is_geldige_zet(van_rij, van_kol, row, col, self.actieve_speler)
 
-                    # Verplaats de steen
-                    spelbord[row][col] = actieve_speler
-                    spelbord[van_rij][van_kol] = "leeg"
+            if is_geldig:
+                moet_slaan = self.speler_heeft_slagopties(self.actieve_speler)
 
-                    # Verwijder de vijand als de logica heeft bevestigd dat dit een slagzet is
-                    if is_slagzet:
-                        verwijder_vijand(van_rij, van_kol, row, col)
-
+                # Slagverplichting controle op basis van de zet-data
+                if moet_slaan and not is_slagzet:
+                    print("Ongeldige zet: Slaan is verplicht!")
+                    messagebox.showwarning("Slagverplichting", "Je bent verplicht om te slaan!")
                     geselecteerde_steen = None
-                    actieve_speler = "zwart" if actieve_speler == "wit" else "wit"
-                    
+                    return
 
-                    print(f"Zet succesvol! Nu aan de beurt: {actieve_speler}")
-                    update_scherm()
+                # Verplaats de steen
+                self.spelbord[row][col] = self.actieve_speler
+                self.spelbord[van_rij][van_kol] = "leeg"
 
-                else:
-                    print("Ongeldige zet!")
-                    geselecteerde_steen = None
+                # Verwijder de vijand als de logica heeft bevestigd dat dit een slagzet is
+                if is_slagzet:
+                    self.verwijder_vijand(van_rij, van_kol, row, col)
 
+                geselecteerde_steen = None
+                self.actieve_speler = "zwart" if self.actieve_speler == "wit" else "wit"
+                
+
+                print(f"Zet succesvol! Nu aan de beurt: {self.actieve_speler}")
+                self.update_scherm()
+
+            else:
+                print("Ongeldige zet!")
+                geselecteerde_steen = None
+
+    def start(self):
+        self.update_scherm()
+        self.scherm.show()
 ##Het "hoofdprogramma"
 def main():
     spel = dammen()  #
